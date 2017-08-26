@@ -7,8 +7,12 @@ import (
 	"time"
 )
 
+type Redis struct {
+	connection net.Conn
+}
+
 //Seed - Create a new connection of redis
-func Seed(address, port, password string, timeout int) (net.Conn, error) {
+func Seed(address, port, password string, timeout int, db int) (*Redis, error) {
 
 	defaultTimeout, _ := time.ParseDuration(fmt.Sprintf("%ds", timeout))
 
@@ -21,12 +25,35 @@ func Seed(address, port, password string, timeout int) (net.Conn, error) {
 	if password != "" {
 		cmd := fmt.Sprintf("AUTH %s\r\n", password)
 
-		isAuthenticated, err := sendCo2(con, []byte(cmd))
+		_, err := sendCo2(con, []byte(cmd))
 		if err != nil {
 			log.Println("Error Authenticating to Redis : ", err)
 			return nil, err
 		}
-		fmt.Println("Authentication Status: ", isAuthenticated)
+
 	}
-	return con, nil
+
+	if db != 0 {
+		defaultDb := fmt.Sprintf("SELECT %d\r\n", db)
+		_, err := sendCo2(con, []byte(defaultDb))
+		if err != nil {
+			log.Println("Error Selecting Database to Redis : ", err)
+			return nil, err
+		}
+
+	}
+	client := new(Redis)
+	client.connection = con
+	return client, nil
+}
+
+//Ping - pings the Redis server
+func (plant *Redis) Ping() string {
+	pingCmd := fmt.Sprintf("PING\r\n")
+	pong, err := sendCo2(plant.connection, []byte(pingCmd))
+	if err != nil {
+		log.Println("Error Pinging to Redis : ", err)
+		return "-ERR"
+	}
+	return pong.(string)
 }
