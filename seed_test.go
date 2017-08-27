@@ -44,3 +44,33 @@ func TestSeedPing(t *testing.T) {
 	}
 	fmt.Println("ping status ", pong)
 }
+func TestEcho(t *testing.T) {
+	client, err := Seed("127.0.0.1", "6379", "letmein", 3, 0)
+	if err != nil {
+		t.Error(err)
+	}
+	echo := client.Echo("Hello")
+	if echo != "Hello" {
+
+		t.Error("Expected Hello")
+	}
+	echo = client.Echo("")
+	if echo != "" {
+		t.Error("Expected Empty string ")
+	}
+	echo = client.Echo("12")
+	if echo != "12" {
+		t.Error("Expected 1")
+	}
+}
+
+func TestQuit(t *testing.T) {
+	client, err := Seed("127.0.0.1", "6379", "letmein", 3, 0)
+	if err != nil {
+		t.Error(err)
+	}
+	isQuitted := client.Quit()
+	if isQuitted != "OK" {
+		t.Error("Quiting the server failed")
+	}
+}

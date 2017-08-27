@@ -57,3 +57,29 @@ func (plant *Redis) Ping() string {
 	}
 	return pong.(string)
 }
+
+//Echo - Echoes back the message
+func (plant *Redis) Echo(message string) string {
+	echoCmd := fmt.Sprintf("ECHO %s\r\n", message)
+	echo, err := sendCo2(plant.connection, []byte(echoCmd))
+	if err != nil {
+		log.Println("Error Echoing From Redis : ", err)
+		return ""
+	}
+	return echo.(string)
+}
+
+//Quit - closes the Redis server connection
+func (plant *Redis) Quit() string {
+	quitCmd := fmt.Sprint("QUIT\r\n")
+	quitOk, err := sendCo2(plant.connection, []byte(quitCmd))
+	if err != nil {
+		log.Println("Error Quitting the Connection: ", err)
+		return ""
+	}
+	if plant.connection != nil {
+		plant.connection.Close()
+		plant.connection = nil
+	}
+	return quitOk.(string)
+}
