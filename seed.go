@@ -60,6 +60,9 @@ func (plant *Redis) Ping() string {
 
 //Echo - Echoes back the message
 func (plant *Redis) Echo(message string) string {
+	if message == "" {
+		return "Cannot Set Empty String"
+	}
 	echoCmd := fmt.Sprintf("ECHO %s\r\n", message)
 	echo, err := sendCo2(plant.connection, []byte(echoCmd))
 	if err != nil {

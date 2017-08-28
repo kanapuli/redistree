@@ -64,11 +64,16 @@ func getOxygen(reader *bufio.Reader) (interface{}, error) {
 func fireCommand(plant *Redis, cmd string, args ...string) (data interface{}, err error) {
 	var b []byte
 	b = composeCommandsBytes(cmd, args...)
-	response, err := plant.connection.Write(b)
+	_, err = plant.connection.Write(b)
 	if err != nil {
 		return nil, err
 	}
-	return response, nil
+	reader := bufio.NewReader(plant.connection)
+	data, err = getOxygen(reader)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
 }
 
 func composeCommandsBytes(cmd string, args ...string) []byte {
