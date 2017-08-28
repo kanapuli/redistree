@@ -2,7 +2,9 @@ package redisv1
 
 import (
 	"bufio"
+	"bytes"
 	"errors"
+	"fmt"
 	"log"
 	"net"
 	"strings"
@@ -57,4 +59,23 @@ func getOxygen(reader *bufio.Reader) (interface{}, error) {
 		return line[1:], nil
 	}
 	return nil, composeError("Redis server did not reply")
+}
+
+func fireCommand(plant *Redis, cmd string, args ...string) (data interface{}, err error) {
+	var b []byte
+	b = composeCommandsBytes(cmd, args...)
+	response, err := plant.connection.Write(b)
+	if err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+func composeCommandsBytes(cmd string, args ...string) []byte {
+	var bufferCmd bytes.Buffer
+	fmt.Fprintf(&bufferCmd, "*%d\r\n$%d\r\n%s\r\n", len(args)+1, len(cmd), cmd) // len(args)+1 is used because the cmd is also added to length
+	for _, arg := range args {
+		fmt.Fprintf(&bufferCmd, "$%d\r\n%s\r\n", len(arg), arg)
+	}
+	return bufferCmd.Bytes()
 }
