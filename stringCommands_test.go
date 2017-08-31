@@ -44,3 +44,17 @@ func TestSet(t *testing.T) {
 		t.Error("Error setting the Value for the Key Number")
 	}
 }
+
+func TestGet(t *testing.T) {
+	client, err := Seed("127.0.0.1", "6379", "letmein", 3, 0)
+	if err != nil {
+		t.Error(err)
+	}
+	_ = client.Set("b", "qwerty")
+	redisReply := client.Get("b")
+
+	if redisReply != "qwerty" {
+		t.Error("Error getting the Value for the Key ")
+	}
+
+}

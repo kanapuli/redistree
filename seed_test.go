@@ -49,15 +49,12 @@ func TestEcho(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	echo := client.Echo("Hello")
-	if echo != "Hello" {
+	echo := client.Echo("Hello World")
+	if echo != "Hello World" {
 
 		t.Error("Expected Hello")
 	}
-	echo = client.Echo("")
-	if echo != "" {
-		t.Error("Expected Empty string ")
-	}
+
 	echo = client.Echo("12")
 	if echo != "12" {
 		t.Error("Expected 1")

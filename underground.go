@@ -5,8 +5,11 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"log"
 	"net"
+	"strconv"
 	"strings"
 )
 
@@ -56,7 +59,20 @@ func getOxygen(reader *bufio.Reader) (interface{}, error) {
 	case '*':
 		return line[1:], nil
 	case '$':
-		return line[1:], nil
+		byteSize, err := strconv.Atoi(strings.TrimSpace(line[1:]))
+		if err != nil {
+			return nil, err
+		}
+		if byteSize == -1 {
+			return nil, composeError("Key has no value")
+		}
+		lineReader := io.LimitReader(reader, int64(byteSize))
+		data, err := ioutil.ReadAll(lineReader)
+		if err != nil {
+			return nil, err
+		}
+		//data, err = reader.ReadString('\n')
+		return string(data), nil
 	}
 	return nil, composeError("Redis server did not reply")
 }

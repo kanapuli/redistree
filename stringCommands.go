@@ -29,3 +29,12 @@ func (plant *Redis) Set(key, value string) string {
 	}
 	return setCmd.(string)
 }
+
+func (plant *Redis) Get(key string) interface{} {
+	getCmd, err := fireCommand(plant, "GET", key)
+	if err != nil {
+		log.Println("Error Setting the Key value  : ", err)
+		return err.Error()
+	}
+	return getCmd
+}
