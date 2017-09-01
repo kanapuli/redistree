@@ -61,12 +61,12 @@ func TestEcho(t *testing.T) {
 	}
 }
 
-func TestQuit(t *testing.T) {
+func TestClose(t *testing.T) {
 	client, err := Seed("127.0.0.1", "6379", "letmein", 3, 0)
 	if err != nil {
 		t.Error(err)
 	}
-	isQuitted := client.Quit()
+	isQuitted := client.Close()
 	if isQuitted != "OK" {
 		t.Error("Quiting the server failed")
 	}

@@ -73,7 +73,7 @@ func (plant *Redis) Echo(message string) string {
 }
 
 //Quit - closes the Redis server connection
-func (plant *Redis) Quit() string {
+func (plant *Redis) Close() string {
 	quitCmd := fmt.Sprint("QUIT\r\n")
 	quitOk, err := sendCo2(plant.connection, []byte(quitCmd))
 	if err != nil {

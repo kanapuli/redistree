@@ -58,3 +58,33 @@ func TestGet(t *testing.T) {
 	}
 
 }
+
+func TestIncr(t *testing.T) {
+	client, err := Seed("127.0.0.1", "6379", "letmein", 3, 0)
+	if err != nil {
+		t.Error(err)
+	}
+	defer client.Close()
+	_ = client.Set("b", "1")
+	redisReply := client.Incr("b")
+
+	if redisReply != "2" {
+		t.Error("Error getting the Value for the Key ")
+	}
+
+}
+
+func TestStrLen(t *testing.T) {
+	client, err := Seed("127.0.0.1", "6379", "letmein", 3, 0)
+	if err != nil {
+		t.Error(err)
+	}
+	defer client.Close()
+	_ = client.Set("b", "Writing length")
+	redisReply := client.StrLen("b")
+
+	if redisReply != "14" {
+		t.Error("Error getting the Value for the Key ")
+	}
+
+}

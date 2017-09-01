@@ -20,7 +20,14 @@ func (plant *Redis) Decr(key string) string {
 	}
 	return decrCmd.(string)
 }
-
+func (plant *Redis) Incr(key string) string {
+	incrCmd, err := fireCommand(plant, "INCR", key)
+	if err != nil {
+		log.Println("Error Incrementing  the Key value  : ", err)
+		return err.Error()
+	}
+	return incrCmd.(string)
+}
 func (plant *Redis) Set(key, value string) string {
 	setCmd, err := fireCommand(plant, "SET", key, value)
 	if err != nil {
@@ -37,4 +44,13 @@ func (plant *Redis) Get(key string) interface{} {
 		return err.Error()
 	}
 	return getCmd
+}
+
+func (plant *Redis) StrLen(key string) interface{} {
+	lengthCmd, err := fireCommand(plant, "STRLEN", key)
+	if err != nil {
+		log.Println("Error Setting the Key value  : ", err)
+		return err.Error()
+	}
+	return lengthCmd
 }
