@@ -88,3 +88,51 @@ func TestStrLen(t *testing.T) {
 	}
 
 }
+
+func TestSetRange(t *testing.T) {
+	client, err := Seed("127.0.0.1", "6379", "letmein", 3, 0)
+	if err != nil {
+		t.Error(err)
+	}
+	defer client.Close()
+	_ = client.Set("key1", "Go is written by Jon Skeet")
+	_, err = client.SetRange("key1", 17, "Rob Pike")
+	if err != nil {
+		t.Errorf("Expected to change Jon Skeet but %v", err)
+	}
+
+}
+
+func TestSetNx(t *testing.T) {
+	client, err := Seed("127.0.0.1", "6379", "letmein", 3, 0)
+	if err != nil {
+		t.Error(err)
+	}
+	defer client.Close()
+	redisReply, err := client.SetNx("key1", "This Key exists already")
+	if err != nil {
+		t.Errorf("Unexpected Error %v", err)
+	}
+	if redisReply != "0" {
+		//Since the key1 exists , no set operation is performed . Hence 0 should be the reply
+		t.Errorf("SetNx Expected 0  but got %v", redisReply)
+	}
+
+}
+
+func TestSetEx(t *testing.T) {
+	client, err := Seed("127.0.0.1", "6379", "letmein", 3, 0)
+	if err != nil {
+		t.Error(err)
+	}
+	defer client.Close()
+	redisReply, err := client.SetEx("key1", 10, "This Key should expire in 10 seconds")
+	if err != nil {
+		t.Errorf("Unexpected Error %v", err)
+	}
+	if redisReply != "OK" {
+		//Since the key1 exists , no set operation is performed . Hence 0 should be the reply
+		t.Errorf("Expected OK  but got %v", redisReply)
+	}
+
+}

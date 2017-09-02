@@ -2,6 +2,7 @@ package redisv1
 
 import (
 	"log"
+	"strconv"
 )
 
 func (plant *Redis) Append(key, value string) string {
@@ -53,4 +54,31 @@ func (plant *Redis) StrLen(key string) interface{} {
 		return err.Error()
 	}
 	return lengthCmd
+}
+
+func (plant *Redis) SetRange(key string, rangeVal int, value string) (interface{}, error) {
+	setRangeCmd, err := fireCommand(plant, "SETRANGE", key, strconv.Itoa(rangeVal), value)
+	if err != nil {
+		log.Println("Server Error  : ", err)
+		return nil, err
+	}
+	return setRangeCmd, nil
+}
+
+func (plant *Redis) SetNx(key, value string) (string, error) {
+	setNxCmd, err := fireCommand(plant, "SETNX", key, value)
+	if err != nil {
+		log.Println("Server Error  : ", err)
+		return "0", err
+	}
+	return setNxCmd.(string), nil
+}
+
+func (plant *Redis) SetEx(key string, expiryInSec int, value string) (string, error) {
+	setExCmd, err := fireCommand(plant, "SETEX", key, strconv.Itoa(expiryInSec), value)
+	if err != nil {
+		log.Println("Server Error  : ", err)
+		return "", err
+	}
+	return setExCmd.(string), nil
 }
