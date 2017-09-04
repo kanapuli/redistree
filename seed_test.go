@@ -13,7 +13,7 @@ func TestSeed(t *testing.T) {
 
 func TestSeedErr(t *testing.T) {
 	_, err := Seed("127.0.0.0", "6379", "letmein", 3, 1)
-	//err should not be nil since the host ip is wron
+	//err should not be nil since the host ip is wrong
 	if err == nil {
 		t.Error(err)
 	}

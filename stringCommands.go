@@ -82,3 +82,17 @@ func (plant *Redis) SetEx(key string, expiryInSec int, value string) (string, er
 	}
 	return setExCmd.(string), nil
 }
+
+func (plant *Redis) SetBit(key string, offset int, value string) (int, error) {
+	setBitCmd, err := fireCommand(plant, "SETBIT", key, strconv.Itoa(offset), value)
+	if err != nil {
+		log.Println("Server Error  : ", err)
+		return 0, err
+	}
+	setBit, err := strconv.Atoi(setBitCmd.(string))
+	if err != nil {
+		log.Println("Server Error  : ", err)
+		return 0, err
+	}
+	return setBit, nil
+}
