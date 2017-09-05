@@ -153,3 +153,20 @@ func TestSetBit(t *testing.T) {
 		t.Errorf("Expected OK  but got %v", redisReply)
 	}
 }
+
+func TestMSet(t *testing.T) {
+	client, err := Seed("127.0.0.1", "6379", "letmein", 3, 0)
+	if err != nil {
+		t.Error(err)
+	}
+	defer client.Close()
+	redisReply, err := client.MSet("key1", "1", "key2", "2", "key3", "3")
+	if err != nil {
+		t.Errorf("Unexpected Error %v", err)
+	}
+
+	if redisReply != "OK" {
+		//Since the key1 exists , no set operation is performed . Hence 0 should be the reply
+		t.Errorf("Expected OK  but got %v", redisReply)
+	}
+}

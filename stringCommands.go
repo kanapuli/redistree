@@ -96,3 +96,13 @@ func (plant *Redis) SetBit(key string, offset int, value string) (int, error) {
 	}
 	return setBit, nil
 }
+
+func (plant *Redis) MSet(args ...string) (string, error) {
+	mSetCmd, err := fireCommand(plant, "MSET", args...)
+	if err != nil {
+		log.Println("Server Error  : ", err)
+		return "", err
+	}
+
+	return mSetCmd.(string), nil
+}
