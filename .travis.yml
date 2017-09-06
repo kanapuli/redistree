@@ -4,4 +4,5 @@ before_script: sudo redis-server /etc/redis/redis.conf --port 6379 --requirepass
 
 go: 
   - 1.7.x
-  - master
+  - 1.8.x
+  - 1.9.x
