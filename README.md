@@ -1,4 +1,5 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/kanapuliAthavan/redistree)](https://goreportcard.com/report/github.com/kanapuliAthavan/redistree)
+[![Build Status](https://travis-ci.org/kanapuliAthavan/redistree.svg?branch=master)](https://travis-ci.org/kanapuliAthavan/redistree)
 # RedisTree
    A Client library written for the In-Memory database Redis in Go
    
