@@ -1,9 +1,7 @@
 sudo: true
 language: go
-services:
- - redis-server
+before_script: sudo redis-server /etc/redis/redis.conf --port 6379 --requirepass 'letmein'
+
 go: 
-  - 1.5.x
-  - 1.6.x
   - 1.7.x
   - master
