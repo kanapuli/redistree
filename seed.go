@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+//Redis is the global package client
 type Redis struct {
 	connection net.Conn
 }
@@ -72,7 +73,7 @@ func (plant *Redis) Echo(message string) string {
 	return echo.(string)
 }
 
-//Quit - closes the Redis server connection
+//Close - closes the Redis server connection
 func (plant *Redis) Close() string {
 	quitCmd := fmt.Sprint("QUIT\r\n")
 	quitOk, err := sendCo2(plant.connection, []byte(quitCmd))
