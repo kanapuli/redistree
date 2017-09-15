@@ -57,7 +57,18 @@ func getOxygen(reader *bufio.Reader) (interface{}, error) {
 	case ':':
 		return line[1:], nil
 	case '*':
-		return line[1:], nil
+		size, err := strconv.Atoi(strings.TrimSpace(line[1:]))
+		if err != nil {
+			return nil, err
+		}
+		data := make([][]byte, size)
+		for i := 0; i < size; i++ {
+			data[i], err = takeMoreNutrients(reader)
+			if err != nil {
+				return nil, err
+			}
+		}
+		return data, nil
 	case '$':
 		byteSize, err := strconv.Atoi(strings.TrimSpace(line[1:]))
 		if err != nil {
@@ -77,6 +88,7 @@ func getOxygen(reader *bufio.Reader) (interface{}, error) {
 	return nil, composeError("Redis server did not reply")
 }
 
+//write the commands to the redis tcp connection
 func fireCommand(plant *Redis, cmd string, args ...string) (data interface{}, err error) {
 	var b []byte
 	b = composeCommandsBytes(cmd, args...)
@@ -99,4 +111,31 @@ func composeCommandsBytes(cmd string, args ...string) []byte {
 		fmt.Fprintf(&bufferCmd, "$%d\r\n%s\r\n", len(arg), arg)
 	}
 	return bufferCmd.Bytes()
+}
+
+//takeMoreNutrients reads the redis response for the Array replies
+func takeMoreNutrients(reader *bufio.Reader) ([]byte, error) {
+	head, err := reader.ReadString('\n')
+	if err != nil {
+		return nil, err
+	}
+	switch head[0] {
+	case ':':
+		return []byte(head[1:]), nil
+	case '$':
+		byteSize, err := strconv.Atoi(strings.TrimSpace(head[1:]))
+		if err != nil {
+			return nil, err
+		}
+		if byteSize == -1 {
+			return nil, composeError("Key has no value")
+		}
+		lineReader := io.LimitReader(reader, int64(byteSize))
+		data, err := ioutil.ReadAll(lineReader)
+		if err != nil {
+			return nil, err
+		}
+		return data, nil
+	}
+	return nil, composeError("Expected a : or a $ while reading Array string")
 }
