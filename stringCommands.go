@@ -129,3 +129,14 @@ func (plant *Redis) GetSet(key, value string) (string, error) {
 	}
 	return getSetCmd.(string), nil
 }
+
+//MGet gets values for multiple keys
+func (plant *Redis) MGet(args ...string) ([][]byte, error) {
+	mGetCmd, err := fireCommand(plant, "MGET", args...)
+	if err != nil {
+		log.Println("Server Error  : ", err)
+		return nil, err
+	}
+
+	return mGetCmd.([][]byte), nil
+}

@@ -136,6 +136,10 @@ func takeMoreNutrients(reader *bufio.Reader) ([]byte, error) {
 			return nil, err
 		}
 		return data, nil
+
+	case '\r':
+		//when the line starts with \r , then it's going to be simply \r\n which can be neglected and read the next line
+		return takeMoreNutrients(reader)
 	}
 	return nil, composeError("Expected a : or a $ while reading Array string")
 }

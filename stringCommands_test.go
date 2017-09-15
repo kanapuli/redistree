@@ -9,6 +9,7 @@ func TestAppend(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+	defer client.Close()
 	redisReply := client.Append("a", "Jha Athavan")
 
 	if redisReply < "0" {
@@ -21,6 +22,7 @@ func TestDecr(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+	defer client.Close()
 	redisReply := client.Decr("Jack") // A key which doesnt exist. hence the reply should be 0
 
 	if redisReply >= "0" {
@@ -39,6 +41,7 @@ func TestSet(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+	defer client.Close()
 	redisReply := client.Set("Number", "10")
 	if redisReply != "OK" {
 		t.Error("Error setting the Value for the Key Number")
@@ -50,6 +53,7 @@ func TestGet(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+	defer client.Close()
 	_ = client.Set("b", "qwerty")
 	redisReply := client.Get("b")
 
@@ -189,4 +193,20 @@ func TestGetSet(t *testing.T) {
 	if newSetValue != "5" {
 		t.Errorf("Expected 5 in GetSet but got %v\n", newSetValue)
 	}
+}
+
+func TestMGet(t *testing.T) {
+	client, err := Seed("127.0.0.1", "6379", "letmein", 3, 0)
+	if err != nil {
+		t.Error(err)
+	}
+	defer client.Close()
+	_, _ = client.MSet("key1", "1", "key2", "2", "key3", "3")
+	_, err = client.MGet("key1", "key2", "key3")
+	if err != nil {
+		t.Errorf("Unexpected Error %v\n", err)
+	}
+	// for _, v := range redisReply {
+	// 	fmt.Println(string(v))
+	// }
 }
