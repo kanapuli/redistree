@@ -75,7 +75,8 @@ func getOxygen(reader *bufio.Reader) (interface{}, error) {
 			return nil, err
 		}
 		if byteSize == -1 {
-			return nil, composeError("Key has no value")
+			return nil, nil
+			//return nil, composeError("Key has no value")
 		}
 		lineReader := io.LimitReader(reader, int64(byteSize))
 		data, err := ioutil.ReadAll(lineReader)
@@ -128,7 +129,9 @@ func takeMoreNutrients(reader *bufio.Reader) ([]byte, error) {
 			return nil, err
 		}
 		if byteSize == -1 {
-			return nil, composeError("Key has no value")
+			//When -1 then the redis key doesn't exist and return the value as nil rather than throwing error
+			//return nil, composeError("Key has no value")
+			return nil, nil
 		}
 		lineReader := io.LimitReader(reader, int64(byteSize))
 		data, err := ioutil.ReadAll(lineReader)
