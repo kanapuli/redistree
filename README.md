@@ -23,7 +23,7 @@
    - **String Command Group**     - Append, Decr, Incr, Set, Get, StrLen, SetRange, SetNx,
                                     SetEx, SetBit, MSet, MGet, GetSet
    - **Keys Command Group**       - Exists, Del
-     More Features coming ...
+   - More Features coming ...
      
 # Installation
     Run the following command in the terminal,
