@@ -12,3 +12,12 @@ func (plant *Redis) Exists(keys ...string) (string, error) {
 	return existCmd.(string), nil
 
 }
+
+//Del deletes the list of keys
+func (plant *Redis) Del(keys ...string) (string, error) {
+	delCmd, err := fireCommand(plant, "DEL", keys...)
+	if err != nil {
+		return "", err
+	}
+	return delCmd.(string), nil
+}

@@ -19,9 +19,10 @@
   
 # Supported Features
    The list of supported methods by the Redistree client is ,
-   - **Connection Command Group** - Seed, Ping, Echo, Close
-   -  **String Command Group**    -  Append, Decr, Incr, Set, Get, StrLen, SetRange, SetNx,
-                                   SetEx, SetBit, MSet, GetSet
+   - **Connection Command Group** - Seed(Connect), Ping, Echo, Close
+   - **String Command Group**     - Append, Decr, Incr, Set, Get, StrLen, SetRange, SetNx,
+                                    SetEx, SetBit, MSet, MGet, GetSet
+   - **Keys Command Group**       - Exists, Del
      More Features coming ...
      
 # Installation
