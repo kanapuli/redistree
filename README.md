@@ -22,7 +22,7 @@
    - **Connection Command Group** - Seed(Connect), Ping, Echo, Close
    - **String Command Group**     - Append, Decr, Incr, Set, Get, StrLen, SetRange, SetNx,
                                     SetEx, SetBit, MSet, MGet, GetSet
-   - **Keys Command Group**       - Exists, Del
+   - **Keys Command Group**       - Exists, Del, Expire
    - More Features coming ...
      
 # Installation
