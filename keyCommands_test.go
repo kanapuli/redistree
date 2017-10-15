@@ -63,9 +63,9 @@ func TestDeleteNegative(t *testing.T) {
 		t.Error(err)
 	}
 	defer client.Close()
-	_, err = client.Del("1234 2323")
+	r, err := client.Del("1234 2323")
 
-	if err == nil {
+	if err == nil && r != "0" {
 		t.Error("Expected Error in Delete Cmd but error is nil")
 	}
 }
