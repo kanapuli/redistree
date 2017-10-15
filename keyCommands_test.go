@@ -56,3 +56,32 @@ func TestDelete(t *testing.T) {
 		t.Error("Expected the Key to delete but still it exists")
 	}
 }
+
+func TestDeleteNegative(t *testing.T) {
+	client, err := Seed("127.0.0.1", "6379", "letmein", 3, 0)
+	if err != nil {
+		t.Error(err)
+	}
+	defer client.Close()
+	_, err = client.Del("1234 2323")
+
+	if err == nil {
+		t.Error("Expected Error in Delete Cmd but error is nil")
+	}
+}
+
+func TestExpiry(t *testing.T) {
+	client, err := Seed("127.0.0.1", "6379", "letmein", 3, 0)
+	if err != nil {
+		t.Error(err)
+	}
+	defer client.Close()
+	_ = client.Set("key1", "Expire me in 100 ms")
+	redisReply, err := client.Expire("Key1", 100)
+	if err != nil {
+		t.Errorf("Expected theKey to expire but got error %v", err)
+	}
+	if redisReply != "1" {
+		t.Errorf("Expected 1 while expiring but got %v", redisReply)
+	}
+}
